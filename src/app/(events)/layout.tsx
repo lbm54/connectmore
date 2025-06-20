@@ -14,8 +14,8 @@ export default async function EventsLayout({
 
   // 2️⃣ Prefetch events once for all child pages
   await queryClient.prefetchQuery({
-    queryKey: eventQueryKeys.list(daysAhead),
-    queryFn: () => fetchEvents(daysAhead),
+    queryKey: eventQueryKeys.list({days: daysAhead}),
+    queryFn: () => fetchEvents({days: daysAhead}),
     staleTime: 5 * 60_000, // 5 minutes
   });
 
