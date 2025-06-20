@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 // this is now a **server** component
 import CalendarPageClient from "@/features/events/components/CalendarPageClient";
 
