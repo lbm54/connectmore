@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await getCurrentUser();
@@ -16,7 +16,8 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const organizerId = parseInt(params.id);
+    const { id } = await params;
+    const organizerId = parseInt(id);
     
     // Only allow access to their own organizer profile
     if (user.organizerId !== organizerId) {
@@ -78,7 +79,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await getCurrentUser();
@@ -87,7 +88,8 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const organizerId = parseInt(params.id);
+    const { id } = await params;
+    const organizerId = parseInt(id);
     const body = await request.json();
     
     // Only allow updating their own organizer profile

@@ -5,11 +5,11 @@ const prisma = new PrismaClient();
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Validate params
-    const { id } = await params; // Await params here
+    const { id } = await params;
     const eventInstanceId = parseInt(id);
     const attendees = await prisma.event_attendees.findMany({
       where: {
