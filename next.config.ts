@@ -1,13 +1,6 @@
-// import type { NextConfig } from "next";
+import type { NextConfig } from "next";
 
-// const nextConfig: NextConfig = {
-//   /* config options here */
-// };
-
-// export default nextConfig;
-
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig: NextConfig = {
   // Enable source maps for debugging
   webpack: (config, { dev, isServer }) => {
     if (dev && !isServer) {
@@ -20,6 +13,6 @@ const nextConfig = {
     // This helps with better source maps
     optimizePackageImports: ['lucide-react'],
   },
-}
+};
 
-module.exports = nextConfig
+export default nextConfig;
