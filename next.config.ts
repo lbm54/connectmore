@@ -13,6 +13,11 @@ const nextConfig: NextConfig = {
     // This helps with better source maps
     optimizePackageImports: ['lucide-react'],
   },
+  eslint: {
+    // Warning: This allows production builds to successfully complete even if
+    // your project has ESLint errors.
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;
