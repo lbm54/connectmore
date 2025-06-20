@@ -3,7 +3,7 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 // import Image from "next/image";
 import Link from "next/link";
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef, Suspense } from "react";
 import {
   Navbar,
   NavbarSection,
@@ -201,7 +201,8 @@ function MapIcon({
   );
 }
 
-export function AppNavbar() {
+// Create an internal navbar component that uses useSearchParams
+function AppNavbarInternal() {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -586,6 +587,80 @@ export function AppNavbar() {
         </div>
       )}
     </Navbar>
+  );
+}
+
+// Create a fallback component for when Suspense is loading
+function AppNavbarFallback() {
+  const pathname = usePathname();
+  
+  return (
+    <Navbar className="dark:data-hover:bg-white/5 dark:data-hover:*:data-[slot=icon]:fill-white">
+      <NavbarSection>
+        {/* Logo */}
+        <Link href="/home" className="flex items-center">
+          <Logo className="h-20 w-auto" />
+        </Link>
+
+        <NavbarDivider />
+
+        {/* Main Navigation - simplified without search functionality */}
+        <NavbarItem href="/home" current={pathname === "/home"}>
+          <HomeIcon isActive={pathname === "/home"} />
+          Home
+        </NavbarItem>
+
+        <NavbarItem href="/events" current={pathname === "/events"}>
+          <EventsIcon isActive={pathname === "/events"} />
+          Events
+        </NavbarItem>
+
+        <NavbarItem href="/organizers" current={pathname === "/organizers"}>
+          <OrganizersIcon isActive={pathname === "/organizers"} />
+          Organizers
+        </NavbarItem>
+
+        <NavbarItem href="/venues" current={pathname === "/venues"}>
+          <VenuesIcon isActive={pathname === "/venues"} />
+          Venues
+        </NavbarItem>
+
+        <NavbarItem href="/calendar" current={pathname === "/calendar"}>
+          <CalendarIcon isActive={pathname === "/calendar"} />
+          Calendar
+        </NavbarItem>
+
+        <NavbarItem href="/map" current={pathname === "/map"}>
+          <MapIcon isActive={pathname === "/map"} />
+          Map
+        </NavbarItem>
+      </NavbarSection>
+
+      <NavbarSpacer />
+
+      <NavbarSection>
+        {/* User Authentication */}
+        <SignedOut>
+          <SignUpButton mode="modal">
+            <button className="rounded-lg bg-gradient-to-r from-electric-cyan via-electric-purple to-electric-pink px-6 py-2 text-sm font-semibold text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95">
+              Sign Up
+            </button>
+          </SignUpButton>
+        </SignedOut>
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
+      </NavbarSection>
+    </Navbar>
+  );
+}
+
+// Export the wrapped component
+export function AppNavbar() {
+  return (
+    <Suspense fallback={<AppNavbarFallback />}>
+      <AppNavbarInternal />
+    </Suspense>
   );
 }
 
