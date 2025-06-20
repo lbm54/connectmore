@@ -111,12 +111,12 @@ export async function GET(request: NextRequest) {
           
           // Add filter for regular featured events
           if (featured) {
-            whereClause.events.OR.push({ is_featured: true });
+            whereClause.events.OR!.push({ is_featured: true });
           }
           
           // Add filter for super featured events
           if (superFeatured) {
-            whereClause.events.OR.push({ is_super_featured: true });
+            whereClause.events.OR!.push({ is_super_featured: true });
           }
         }
         
@@ -124,6 +124,9 @@ export async function GET(request: NextRequest) {
          * Add search filter if provided
          */
         if (search.trim()) {
+          if (!whereClause.events) {
+            whereClause.events = {};
+          }
           whereClause.events.name = {
             contains: search.trim(),
             mode: 'insensitive'
@@ -136,6 +139,9 @@ export async function GET(request: NextRequest) {
         if (tags.trim()) {
           const tagArray = tags.split(',').map(tag => tag.trim()).filter(Boolean);
           if (tagArray.length > 0) {
+            if (!whereClause.events) {
+              whereClause.events = {};
+            }
             whereClause.events.events_tags = {
               some: {
                 tags: {

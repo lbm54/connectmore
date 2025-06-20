@@ -26,7 +26,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-// import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import type { FlatEventInstance } from "@/features/events/models/flat_event_instance";
 
@@ -112,8 +111,8 @@ export default function EventDetailPage() {
 
   // Fetch all events using React Query
   const { data: events = [], isLoading, error } = useQuery<FlatEventInstance[], Error>({
-    queryKey: eventQueryKeys.list(365),
-    queryFn: () => fetchEvents(365),
+    queryKey: eventQueryKeys.list({ days: 365 }),
+    queryFn: () => fetchEvents({ days: 365 }),
     staleTime: 5 * 60_000, // 5 minutes
   });
 
@@ -145,7 +144,7 @@ export default function EventDetailPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: eventQueryKeys.rsvp(eventId) });
       queryClient.invalidateQueries({ queryKey: eventQueryKeys.attendees(eventId) });
-      queryClient.invalidateQueries({ queryKey: eventQueryKeys.list(365) });
+      queryClient.invalidateQueries({ queryKey: eventQueryKeys.list({ days: 365 }) });
     },
   });
 

@@ -26,8 +26,8 @@ export const CACHE_CONFIG = {
 
 // Cache key builders
 export const buildCacheKey = {
-  events: (filters?: Record<string, any>) => {
-    const filterString = filters ? new URLSearchParams(filters).toString() : 'all'
+  events: (filters?: Record<string, string | number | boolean | undefined>) => {
+    const filterString = filters ? new URLSearchParams(filters as Record<string, string>).toString() : 'all'
     return `events:${filterString}`
   },
   event: (id: string) => `event:${id}`,

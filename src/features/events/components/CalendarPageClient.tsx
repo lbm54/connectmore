@@ -32,8 +32,8 @@ export default function CalendarPageClient({ daysAhead }: { daysAhead: number })
 
   // Use the same query pattern as HomePage
   const { data: events = [], isLoading, error } = useQuery<FlatEventInstance[], Error>({
-    queryKey: eventQueryKeys.list(daysAhead),
-    queryFn: () => fetchEvents(daysAhead),
+    queryKey: eventQueryKeys.list({ days: daysAhead }),
+    queryFn: () => fetchEvents({ days: daysAhead }),
     staleTime: 5 * 60_000,
   });
 

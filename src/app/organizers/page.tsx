@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Calendar, Users, TrendingUp, ArrowRight, Plus, Settings, Search } from 'lucide-react';
+import { Calendar, Users, TrendingUp, ArrowRight, Plus, Search } from 'lucide-react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
@@ -17,6 +17,39 @@ import {
 } from '@/features/organizers/api';
 import OrganizerEventCard from '@/features/organizers/components/OrganizerEventCard';
 import PublicOrganizerCard from '@/features/organizers/components/PublicOrganizerCard';
+import type { FlatEventInstance } from '@/features/events/models/flat_event_instance';
+
+// Type definitions for better type safety
+interface Organizer {
+  id: number;
+  name: string;
+  image_url?: string | null;
+  website_url?: string | null;
+  contact_phone?: string | null;
+  city?: string | null;
+  state?: string | null;
+  events_url?: string | null;
+}
+
+interface DashboardProps {
+  user: {
+    organizerId?: number;
+    role?: string;
+  };
+  organizer: Organizer;
+  events: FlatEventInstance[];
+}
+
+type PublicOrganizerType = {
+  id: number;
+  name: string;
+  image_url?: string;
+  website_url?: string;
+  contact_phone?: string;
+  city?: string;
+  state?: string;
+  events_url?: string;
+};
 
 // Component for public organizer list
 function PublicOrganizersList() {
@@ -70,7 +103,7 @@ function PublicOrganizersList() {
       ) : (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {organizers.map((organizer: any) => (
+            {organizers.map((organizer: PublicOrganizerType) => (
               <PublicOrganizerCard key={organizer.id} organizer={organizer} />
             ))}
           </div>
@@ -109,7 +142,7 @@ function PublicOrganizersList() {
 }
 
 // Original dashboard component (extracted for clarity)
-function OrganizerDashboard({ user, organizer, events }: any) {
+function OrganizerDashboard({ user, organizer, events }: DashboardProps) {
   // Loading state
   if (!user || !organizer) {
     return (

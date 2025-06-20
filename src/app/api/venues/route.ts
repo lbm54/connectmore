@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
 
     // Filter out null/empty values from each venue
     const cleanedVenues = venues.map(venue => {
-      const cleaned: any = { 
+      const cleaned: Record<string, string | number | boolean> = { 
         id: venue.id, 
         name: venue.name,
         eventCount: venue._count.events + venue._count.event_instances,

@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
 
     // Filter out null/empty values from each organizer
     const cleanedOrganizers = organizers.map(organizer => {
-      const cleaned: any = { id: organizer.id, name: organizer.name };
+      const cleaned: Record<string, string | number> = { id: organizer.id, name: organizer.name };
       
       if (organizer.image_url) cleaned.image_url = organizer.image_url;
       if (organizer.website_url) cleaned.website_url = organizer.website_url;

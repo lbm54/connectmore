@@ -8,7 +8,13 @@ export default function Logo(props: React.SVGProps<SVGSVGElement>) {
     const diagTargets = [3, 2, 1, 0]; // row index for col 0‑3
   
     /* helper: return static chips that sit *below* each animated target */
-    const staticChips = [];
+    interface StaticChip {
+      cx: number;
+      cy: number;
+      color: string;
+    }
+
+    const staticChips: StaticChip[] = [];
     diagTargets.forEach((targetRow, col) => {
       for (let r = rows.length - 1; r > targetRow; r -= 1) {
         staticChips.push({

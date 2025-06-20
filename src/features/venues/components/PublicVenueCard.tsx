@@ -13,7 +13,7 @@ import {
   Monitor 
 } from 'lucide-react';
 
-type PublicVenueCardProps = {
+interface PublicVenueCardProps {
   venue: {
     id: number;
     name: string;
@@ -35,19 +35,25 @@ type PublicVenueCardProps = {
     av_equipment_available?: boolean;
     eventCount?: number;
   };
-};
+}
+
+interface Amenity {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  color: string;
+}
 
 export default function PublicVenueCard({ venue }: PublicVenueCardProps) {
   const address = [venue.address_line1, venue.city, venue.state, venue.zip]
     .filter(Boolean)
     .join(', ');
 
-  const amenities = [
+  const amenities: Amenity[] = [
     venue.parking_available && { icon: Car, label: 'Parking', color: 'text-electric-blue' },
     venue.wifi_available && { icon: Wifi, label: 'WiFi', color: 'text-electric-green' },
     venue.catering_available && { icon: Coffee, label: 'Catering', color: 'text-electric-orange' },
     venue.av_equipment_available && { icon: Monitor, label: 'A/V Equipment', color: 'text-electric-pink' },
-  ].filter(Boolean);
+  ].filter(Boolean) as Amenity[];
 
   return (
     <Card className="h-full flex flex-col bg-surface-800 border-surface-700 hover:border-primary-500 transition-colors">

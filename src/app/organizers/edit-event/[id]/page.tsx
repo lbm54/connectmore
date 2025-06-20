@@ -11,7 +11,7 @@ import {
 } from '@/features/organizers/api';
 import EventForm from '@/features/organizers/components/EventForm';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+// import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { UpdateEventInput } from '@/features/organizers/models/organizer_event';
 
 export default function EditEventPage() {
@@ -37,9 +37,7 @@ export default function EditEventPage() {
 
   // ✅ ADD THIS - Extract tag IDs from the event data
   const initialTagIds = React.useMemo(() => {
-    if (event?.tag_ids && Array.isArray(event.tag_ids)) {
-      return event.tag_ids;
-    }
+    // Return empty array since tag_names are strings but tagIds expects numbers
     return [];
   }, [event]);
 

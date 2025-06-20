@@ -12,27 +12,27 @@ import type { FlatEventInstance } from "../models/flat_event_instance";
 export default function HomePageClient({ daysAhead }: { daysAhead: number }) {
   const router = useRouter();
   const { data: events = [], isLoading } = useQuery<FlatEventInstance[], Error>({
-    queryKey: eventQueryKeys.list(daysAhead),
-    queryFn: () => fetchEvents(daysAhead),
+    queryKey: eventQueryKeys.list({ days: daysAhead }),
+    queryFn: () => fetchEvents({ days: daysAhead }),
     staleTime: 5 * 60_000, // 5 minutes - matches your server prefetch
   });
 
   // categorize…
-  const now = new Date();
-  const weekOut = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-  const upcoming = events.filter((e) => {
-    const d = new Date(e.start_datetime ?? e.instance_date ?? "");
-    return d >= now && d <= weekOut;
-  });
+  // const now = new Date();
+  // const weekOut = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+  // const upcoming = events.filter((e) => {
+  //   const d = new Date(e.start_datetime ?? e.instance_date ?? "");
+  //   return d >= now && d <= weekOut;
+  // });
   const featured = events.filter(
     (e) => e.is_featured || (e.attendee_count ?? 0) > 50
   );
-  const free = events.filter((e) =>
-    e.tag_names?.some((t) => t.toLowerCase() === "free")
-  );
-  const rest = events.filter(
-    (e) => !upcoming.includes(e) && !featured.includes(e) && !free.includes(e)
-  );
+  // const free = events.filter((e) =>
+  //   e.tag_names?.some((t) => t.toLowerCase() === "free")
+  // );
+  // const rest = events.filter(
+  //   (e) => !upcoming.includes(e) && !featured.includes(e) && !free.includes(e)
+  // );
 
   // Group featured events by category
   const eventsByCategory = featured.reduce((acc, event) => {

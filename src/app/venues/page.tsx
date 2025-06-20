@@ -9,6 +9,29 @@ import { Button } from '@/components/ui/button';
 import { fetchVenuesList, venueQueryKeys } from '@/features/venues/api';
 import PublicVenueCard from '@/features/venues/components/PublicVenueCard';
 
+// Type definition for venue
+interface Venue {
+  id: number;
+  name: string;
+  description?: string;
+  address_line1?: string;
+  address_line2?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+  phone?: string;
+  email?: string;
+  website_url?: string;
+  capacity?: number;
+  image_url?: string;
+  parking_available?: boolean;
+  wheelchair_accessible?: boolean;
+  wifi_available?: boolean;
+  catering_available?: boolean;
+  av_equipment_available?: boolean;
+  eventCount?: number;
+}
+
 export default function VenuesPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -63,7 +86,7 @@ export default function VenuesPage() {
       ) : (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {venues.map((venue: any) => (
+            {venues.map((venue: Venue) => (
               <PublicVenueCard key={venue.id} venue={venue} />
             ))}
           </div>

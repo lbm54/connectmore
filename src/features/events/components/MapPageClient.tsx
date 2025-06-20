@@ -6,6 +6,7 @@ import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
+// import type { MarkerCluster } from 'leaflet.markercluster';
 import type { FlatEventInstance } from "../models/flat_event_instance";
 import { formatEventDateTimeEnhanced } from "../utils/formatEventDateTime";
 
@@ -15,7 +16,12 @@ import 'react-leaflet-markercluster/styles';
 
 // Fix Leaflet default icons in Next.js
 import L from 'leaflet';
-delete (L.Icon.Default.prototype as any)._getIconUrl;
+import type { MarkerCluster } from 'leaflet';
+interface ExtendedIconDefault extends L.Icon.Default {
+  _getIconUrl?: () => string;
+}
+
+delete (L.Icon.Default.prototype as ExtendedIconDefault)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
   iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
@@ -41,7 +47,11 @@ const DATE_FILTERS: DateFilterOption[] = [
 ];
 
 // Custom cluster icon function
-const createClusterCustomIcon = function (cluster: any) {
+interface ClusterCustomIconOptions {
+  cluster: MarkerCluster;
+}
+
+const createClusterCustomIcon = function (cluster: ClusterCustomIconOptions['cluster']): L.DivIcon {
   return L.divIcon({
     html: `<span class="cluster-count">${cluster.getChildCount()}</span>`,
     className: 'marker-cluster-custom',
@@ -58,8 +68,8 @@ export default function MapPageClient({ daysAhead }: { daysAhead: number }) {
 
   // Use the same query pattern as other pages
   const { data: events = [], isLoading, error } = useQuery<FlatEventInstance[], Error>({
-    queryKey: eventQueryKeys.list(currentDays),
-    queryFn: () => fetchEvents(currentDays),
+    queryKey: eventQueryKeys.list({ days: currentDays }),
+    queryFn: () => fetchEvents({ days: currentDays }),
     staleTime: 5 * 60_000,
   });
 

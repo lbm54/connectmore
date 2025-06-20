@@ -24,8 +24,8 @@ export default function EventsPageClient() {
 
   // Fetch events and categories
   const { data: events = [], isLoading: isLoadingEvents } = useQuery<FlatEventInstance[], Error>({
-    queryKey: eventQueryKeys.list(365),
-    queryFn: () => fetchEvents(365),
+    queryKey: eventQueryKeys.list({ days: 365 }),
+    queryFn: () => fetchEvents({ days: 365 }),
     staleTime: 5 * 60_000,
   });
 

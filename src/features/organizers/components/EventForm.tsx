@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
@@ -107,7 +107,7 @@ export default function EventForm({
   const [tagQuery, setTagQuery] = useState('');
   const [showEditScopeDialog, setShowEditScopeDialog] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (initialData?.tagIds) {
       setSelectedTags(initialData.tagIds);
     }
@@ -206,6 +206,11 @@ export default function EventForm({
     onSubmit(submitData);
   };
 
+  // Create a wrapper for handleSubmit that matches the expected signature
+  const handleFormSubmit = (data: EventFormData) => {
+    onFormSubmit(data);
+  };
+
   const handleRecurringEventSubmit = (updateScope: 'instance' | 'all_instances' | 'future_instances') => {
     const formData = watch(); // Get current form data
     onFormSubmit(formData as EventFormData, updateScope);
@@ -231,7 +236,7 @@ export default function EventForm({
         </p>
       </div>
 
-      <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-8">
+      <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-8">
         {/* Two column layout on larger screens */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
           {/* Left Column */}
