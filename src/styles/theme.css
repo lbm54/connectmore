@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+/* Unified Neon Dark Theme */
+@theme {
+  /* Pure black backgrounds for neon contrast */
+  --color-surface-50:  #ffffff;  /* pure white - for text */
+  --color-surface-100: #f8fafc;  
+  --color-surface-200: #e2e8f0;
+  --color-surface-300: #94a3b8;  /* reduced intermediate steps */
+  --color-surface-400: #64748b;
+  --color-surface-500: #475569;
+  --color-surface-600: #334155;
+  --color-surface-700: #1e293b;
+  --color-surface-800: #0f172a;  /* very dark */
+  --color-surface-900: #000000;  /* pure black - for backgrounds */
+
+  /* Primary Brand Colors (Purple from logo) */
+  --color-primary-50:  #faf5ff;
+  --color-primary-100: #f3e8ff;
+  --color-primary-200: #e9d5ff;
+  --color-primary-300: #d8b4fe;
+  --color-primary-400: #c084fc;
+  --color-primary-500: #8b5cf6;  /* electric purple */
+  --color-primary-600: #7c3aed;
+  --color-primary-700: #6d28d9;
+  --color-primary-800: #5b21b6;
+  --color-primary-900: #4c1d95;
+
+  /* Secondary Brand Colors (Electric Cyan) */
+  --color-secondary-50:  #ecfeff;
+  --color-secondary-100: #cffafe;
+  --color-secondary-200: #a5f3fc;
+  --color-secondary-300: #67e8f9;
+  --color-secondary-400: #22d3ee;
+  --color-secondary-500: #06b6d4;  /* electric cyan */
+  --color-secondary-600: #0891b2;
+  --color-secondary-700: #0e7490;
+  --color-secondary-800: #155e75;
+  --color-secondary-900: #164e63;
+
+  /* Electric Accent Colors */
+  --color-electric-red:    #ff1744;  /* from Connect Four */
+  --color-electric-yellow: #ffd600;  /* from Connect Four */
+  --color-electric-green:  #10b981;  /* electric emerald */
+  --color-electric-blue:   #0ea5e9;  /* electric sky */
+  --color-electric-pink:   #ec4899;  /* electric pink */
+  --color-electric-orange: #ff6b35;  /* electric orange */
+
+  /* 4 Standard Gradient Combinations */
+  --gradient-primary:   linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);    /* Purple → Pink */
+  --gradient-secondary: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);    /* Cyan → Blue */
+  --gradient-energy:    linear-gradient(135deg, #ff1744 0%, #ff6b35 100%);    /* Red → Orange */
+  --gradient-fresh:     linear-gradient(135deg, #ffd600 0%, #10b981 100%);    /* Yellow → Green */
+
+  /* Status Colors (Electric versions) */
+  --color-success: #10b981;  /* electric green */
+  --color-warning: #ffd600;  /* electric yellow */
+  --color-error:   #ff1744;  /* electric red */
+  --color-info:    #06b6d4;  /* electric cyan */
+
+  /* Legacy mappings for compatibility */
+  --color-primary:   #8b5cf6;  /* electric purple */
+  --color-highlight: #ffd600;  /* electric yellow */
+  --color-accent:    #ff1744;  /* electric red */
+
+  /* Typography */
+  --font-heading: "Poppins", ui-sans-serif, system-ui;
+  --font-body:    "Inter",   ui-sans-serif, system-ui;
+}
+
+/* Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Poppins:wght@400;500;700&display=swap");
+
+/* Utility classes for gradients */
+.gradient-primary { background: var(--gradient-primary); }
+.gradient-secondary { background: var(--gradient-secondary); }
+.gradient-energy { background: var(--gradient-energy); }
+.gradient-fresh { background: var(--gradient-fresh); }
+
+/* Text gradient utilities */
+.text-gradient-primary {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-secondary {
+  background: var(--gradient-secondary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Electric color utilities */
+.text-electric-red { color: var(--color-electric-red); }
+.text-electric-yellow { color: var(--color-electric-yellow); }
+.text-electric-green { color: var(--color-electric-green); }
+.text-electric-blue { color: var(--color-electric-blue); }
+.text-electric-pink { color: var(--color-electric-pink); }
+.text-electric-orange { color: var(--color-electric-orange); }
+
+.bg-electric-red { background-color: var(--color-electric-red); }
+.bg-electric-yellow { background-color: var(--color-electric-yellow); }
+.bg-electric-green { background-color: var(--color-electric-green); }
+.bg-electric-blue { background-color: var(--color-electric-blue); }
+.bg-electric-pink { background-color: var(--color-electric-pink); }
+.bg-electric-orange { background-color: var(--color-electric-orange); }
+
+.border-electric-red { border-color: var(--color-electric-red); }
+.border-electric-yellow { border-color: var(--color-electric-yellow); }
+.border-electric-green { border-color: var(--color-electric-green); }
+.border-electric-blue { border-color: var(--color-electric-blue); }
+.border-electric-pink { border-color: var(--color-electric-pink); }
+.border-electric-orange { border-color: var(--color-electric-orange); }

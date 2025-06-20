@@ -1,0 +1,406 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model venues {
+  id                     Int       @id @default(autoincrement())
+  name                   String    @db.VarChar(255)
+  description            String?
+  address_line1          String?   @db.VarChar(255)
+  address_line2          String?   @db.VarChar(255)
+  city                   String?   @db.VarChar(100)
+  state                  String?   @db.VarChar(5)
+  zip                    String?   @db.VarChar(10)
+  country                String?   @default("USA") @db.VarChar(100)
+  phone                  String?   @db.VarChar(50)
+  email                  String?   @db.VarChar(255)
+  website_url            String?   @db.VarChar(500)
+  capacity               Int?
+  parking_available      Boolean?  @default(false)
+  wheelchair_accessible  Boolean?  @default(false)
+  wifi_available         Boolean?  @default(false)
+  catering_available     Boolean?  @default(false)
+  av_equipment_available Boolean?  @default(false)
+  image_url              String?   @db.VarChar(1000)
+  latitude               Decimal?  @db.Decimal(10, 8)
+  longitude              Decimal?  @db.Decimal(11, 8)
+  timezone               String?   @default("America/Chicago") @db.VarChar(50)
+  created_at             DateTime? @default(now()) @db.Timestamp(6)
+  updated_at             DateTime? @default(now()) @db.Timestamp(6)
+  is_active              Boolean?  @default(true)
+
+  events          events[]          @relation("EventVenue")
+  event_instances event_instances[] @relation("InstanceVenue")
+
+  @@index([city], map: "idx_venues_city")
+  @@index([state], map: "idx_venues_state")
+  @@index([is_active], map: "idx_venues_active")
+}
+
+model attachments {
+  id        Int     @id @default(autoincrement())
+  event_id  Int?
+  file_id   String? @db.VarChar(50)
+  file_url  String?
+  icon_link String?
+  mime_type String? @db.VarChar(50)
+  title     String? @db.VarChar(255)
+  events    events? @relation(fields: [event_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model audit_log {
+  id         Int       @id @default(autoincrement())
+  table_name String    @db.VarChar(100)
+  record_id  Int
+  action     String    @db.VarChar(10)
+  changed_by String?   @db.VarChar(50)
+  changed_at DateTime? @default(now()) @db.Timestamp(6)
+  old_values Json?
+  new_values Json?
+  users      users?    @relation(fields: [changed_by], references: [userid], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([changed_at], map: "idx_audit_log_changed_at")
+  @@index([changed_by], map: "idx_audit_log_changed_by")
+  @@index([table_name, record_id], map: "idx_audit_log_table_record")
+}
+
+model event_attendees {
+  id                Int              @id(map: "attendees_pkey") @default(autoincrement())
+  instance_id       Int?
+  user_id           String?          @db.VarChar(50)
+  organizer         Boolean?
+  self              Boolean?
+  resource          Boolean?
+  optional          Boolean?
+  response_status   String?          @db.VarChar(50)
+  comment           String?
+  additional_guests Int?
+  users             users?           @relation(fields: [user_id], references: [userid], onDelete: NoAction, onUpdate: NoAction, map: "attendees_user_id_fkey")
+  event_instances   event_instances? @relation(fields: [instance_id], references: [id], onDelete: Cascade, map: "event_attendees_event_instances_id_fk")
+
+  @@index([user_id], map: "idx_event_attendees_user")
+}
+
+model event_categories {
+  id                  Int                   @id @default(autoincrement())
+  category_name       String                @db.VarChar(255)
+  event_subcategories event_subcategories[]
+  events              events[]
+}
+
+model event_instance_statuses {
+  id              Int               @id @default(autoincrement())
+  status_name     String            @db.VarChar(100)
+  event_instances event_instances[]
+}
+
+model event_instances {
+  id                         Int                      @id @default(autoincrement())
+  event_id                   Int?
+  instance_date              DateTime?                @db.Date
+  start_time                 DateTime?                @db.Time(6)
+  end_time                   DateTime?                @db.Time(6)
+  instance_end_date          DateTime?                @db.Date
+  instance_html_link         String?
+  instance_summary           String?                  @db.VarChar(255)
+  instance_description       String?
+  instance_start_date        DateTime?                @db.Date
+  instance_thumbnail_address String?                  @db.VarChar(2500)
+  instance_image_address     String?                  @db.VarChar(2500)
+  instance_name              String?                  @db.VarChar(500)
+  instance_venue_id          Int?
+  instance_subcategory_id    Int?
+  instance_start_time        String?                  @db.VarChar(50)
+  instance_end_time          String?                  @db.VarChar(50)
+  instance_video_url         String?                  @db.VarChar(2500)
+  instance_address           String?                  @db.VarChar(255)
+  instance_city              String?                  @db.VarChar(255)
+  instance_state             String?                  @db.VarChar(5)
+  instance_zip               String?                  @db.VarChar(10)
+  instance_custom_venue_name String?                  @db.VarChar(255)
+  instance_use_custom_venue  Boolean?                 @default(false)
+  instance_snippet           String?                  @db.VarChar(100)
+  status_id                  Int?
+  start_datetime             DateTime?                @db.Timestamp(6)
+  end_datetime               DateTime?                @db.Timestamp(6)
+  current_attendees          Int?                     @default(0)
+  max_attendees              Int?
+  allow_waitlist             Boolean?                 @default(true)
+  uses_event_name            Boolean?                 @default(true)
+  uses_event_description     Boolean?                 @default(true)
+  event_attendees            event_attendees[]
+  event_comments             event_comments[]
+  events                     events?                  @relation(fields: [event_id], references: [id], onDelete: Cascade)
+  event_subcategories        event_subcategories?     @relation(fields: [instance_subcategory_id], references: [id], onUpdate: NoAction)
+  event_instance_statuses    event_instance_statuses? @relation(fields: [status_id], references: [id], onUpdate: NoAction)
+  venues                     venues?                  @relation("InstanceVenue", fields: [instance_venue_id], references: [id])
+  event_waitlist             event_waitlist[]
+
+  @@index([instance_date, instance_start_date, instance_end_date], map: "idx_event_instances_dates")
+  @@index([instance_end_date], map: "idx_event_instances_end_date")
+  @@index([instance_start_date], map: "idx_event_instances_start_date")
+  @@index([status_id], map: "idx_event_instances_status_id")
+  @@index([instance_subcategory_id], map: "idx_event_instances_subcategory_id")
+  @@index([instance_venue_id], map: "idx_event_instances_venue_id")
+  @@index([instance_city, instance_state], map: "idx_event_instances_location")
+}
+
+model event_statuses {
+  id          Int      @id @default(autoincrement())
+  status_name String   @unique @db.VarChar(100)
+  events      events[]
+}
+
+model event_subcategories {
+  id               Int               @id @default(autoincrement())
+  category_id      Int?
+  subcategory_name String?           @db.VarChar(255)
+  event_instances  event_instances[]
+  event_categories event_categories? @relation(fields: [category_id], references: [id], onDelete: Cascade, map: "fk_subcategories_category")
+  events           events[]
+}
+
+model event_waitlist {
+  id                Int             @id @default(autoincrement())
+  event_instance_id Int
+  user_id           String          @db.VarChar(50)
+  waitlist_position Int
+  created_at        DateTime?       @default(now()) @db.Timestamp(6)
+  event_instances   event_instances @relation(fields: [event_instance_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users             users           @relation(fields: [user_id], references: [userid], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([event_instance_id, user_id])
+  @@index([event_instance_id], map: "idx_event_waitlist_instance")
+  @@index([user_id], map: "idx_event_waitlist_user")
+}
+
+model events {
+  id                       Int                      @id @default(autoincrement())
+  event_id                 String?                  @unique @db.VarChar(50)
+  status                   String?                  @db.VarChar(50)
+  html_link                String?
+  created                  DateTime?                @db.Timestamp(6)
+  updated                  DateTime?                @db.Timestamp(6)
+  summary                  String?                  @db.VarChar(255)
+  description              String?
+  creator_id               String?                  @db.VarChar(50)
+  organizer_id             Int?
+  start_date               DateTime?                @db.Date
+  end_date                 DateTime?                @db.Date
+  recurrence               String?                  @db.VarChar(255)
+  recurring_event_id       String?                  @db.VarChar(50)
+  ical_uid                 String?                  @db.VarChar(50)
+  locked                   Boolean?
+  category_id              Int?
+  thumbnail_address        String?                  @db.VarChar(2500)
+  image_address            String?                  @db.VarChar(2500)
+  name                     String?                  @db.VarChar(500)
+  venue_id                 Int?
+  guests_can_invite_others Int?
+  subcategory_id           Int?
+  start_time               String?                  @db.VarChar(50)
+  end_time                 String?                  @db.VarChar(50)
+  source                   String?                  @db.VarChar(100)
+  is_featured              Boolean?                 @default(false)
+  is_super_featured        Boolean?                 @default(false)
+  search_vector            Unsupported("tsvector")?
+  is_checked               Boolean?                 @default(false)
+  importance               Int?                     @default(1)
+  video_url                String?                  @db.VarChar(2500)
+  address                  String?                  @db.VarChar(255)
+  city                     String?                  @db.VarChar(255)
+  state                    String?                  @db.VarChar(5)
+  zip                      String?                  @db.VarChar(10)
+  start_datetime           DateTime?                @db.Timestamp(6)
+  end_datetime             DateTime?                @db.Timestamp(6)
+  status_id                Int?
+  custom_venue_name        String?                  @db.VarChar(255)
+  use_custom_venue         Boolean?                 @default(false)
+  is_recurring             Boolean?                 @default(false)
+  recurrence_end_date      DateTime?                @db.Date
+  instance_template_name   String?                  @db.VarChar(500)
+  instance_template_desc   String?
+  max_attendees            Int?
+  snippet                  String?                  @db.VarChar(100)
+  attachments              attachments[]
+  event_instances          event_instances[]
+  event_categories         event_categories?        @relation(fields: [category_id], references: [id], onDelete: Cascade, map: "events_event_categories_id_fk")
+  event_subcategories      event_subcategories?     @relation(fields: [subcategory_id], references: [id], onDelete: Cascade, map: "events_event_subcategories_id_fk")
+  organizers               organizers?              @relation(fields: [organizer_id], references: [id], onDelete: Cascade)
+  event_statuses           event_statuses?          @relation(fields: [status_id], references: [id], onDelete: Cascade, map: "fk_events_status")
+  venues                   venues?                  @relation("EventVenue", fields: [venue_id], references: [id])
+  events_flags             events_flags[]
+  events_tags              events_tags[]
+
+  @@index([category_id], map: "idx_events_category")
+  @@index([start_date, end_date], map: "idx_events_dates")
+  @@index([name], map: "idx_events_name")
+  @@index([organizer_id], map: "idx_events_organizer")
+  @@index([status], map: "idx_events_status")
+  @@index([subcategory_id], map: "idx_events_subcategory")
+  @@index([search_vector], map: "idx_search_vector", type: Gin)
+}
+
+model events_flags {
+  id       Int     @id @default(autoincrement())
+  event_id Int
+  flag_id  Int
+  details  String?
+  events   events  @relation(fields: [event_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  flags    flags   @relation(fields: [flag_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model events_tags {
+  id       Int    @id @default(autoincrement())
+  event_id Int
+  tag_id   Int
+  events   events @relation(fields: [event_id], references: [id], onDelete: Cascade, map: "events_tags_events_id_fk")
+  tags     tags   @relation(fields: [tag_id], references: [id], onDelete: Cascade, map: "events_tags_tags_id_fk")
+
+  @@unique([event_id, tag_id])
+  @@index([event_id], map: "idx_events_tags_event")
+  @@index([tag_id], map: "idx_events_tags_tag")
+}
+
+model flags {
+  id           Int            @id @default(autoincrement())
+  flag         String         @db.VarChar(20)
+  events_flags events_flags[]
+}
+
+model organizer_files {
+  id           Int       @id @default(autoincrement())
+  organizer_id Int
+  file_key     String    @unique @db.VarChar(255)
+  file_size    Int
+  file_type    String    @db.VarChar(50)
+  upload_date  DateTime? @default(now()) @db.Timestamp(6)
+
+  @@index([organizer_id], map: "idx_organizer_files_organizer_id")
+}
+
+model organizer_quota {
+  organizer_id Int       @id
+  quota_limit  BigInt    @default(104857600)
+  last_updated DateTime? @default(now()) @db.Timestamp(6)
+}
+
+model organizer_social_media {
+  id           Int        @id @default(autoincrement())
+  organizer_id Int
+  platform     String     @db.VarChar(50)
+  url          String     @db.VarChar(500)
+  username     String?    @db.VarChar(100)
+  organizers   organizers @relation(fields: [organizer_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([organizer_id, platform])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model organizers {
+  id                     Int                      @id @default(autoincrement())
+  name                   String                   @db.VarChar(255)
+  contact_phone          String?                  @db.VarChar(50)
+  address_line1          String?                  @db.VarChar(255)
+  address_line2          String?                  @db.VarChar(255)
+  city                   String?                  @db.VarChar(100)
+  state                  String?                  @db.VarChar(50)
+  postal_code            String?                  @db.VarChar(20)
+  country                String?                  @db.VarChar(100)
+  website_url            String?                  @db.VarChar(255)
+  created_at             DateTime?                @default(now()) @db.Timestamp(6)
+  updated_at             DateTime?                @default(now()) @db.Timestamp(6)
+  image_url              String?                  @db.VarChar(1000)
+  events_url             String?                  @db.VarChar(500)
+  is_checked             Boolean?                 @default(false)
+  aliases                Json?
+  auth_userid            String?                  @db.VarChar(100)
+  events                 events[]
+  organizer_social_media organizer_social_media[]
+}
+
+model permissions {
+  id               Int                @id @default(autoincrement())
+  permission_name  String             @unique @db.VarChar(100)
+  description      String?
+  role_permissions role_permissions[]
+}
+
+model role_permissions {
+  id            Int         @id @default(autoincrement())
+  role_id       Int
+  permission_id Int
+  permissions   permissions @relation(fields: [permission_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  roles         roles       @relation(fields: [role_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([role_id, permission_id])
+}
+
+model roles {
+  id               Int                @id @default(autoincrement())
+  role_name        String             @unique @db.VarChar(50)
+  role_permissions role_permissions[]
+  user_roles       user_roles[]
+}
+
+model tags {
+  id          Int           @id @default(autoincrement())
+  tag_name    String        @unique(map: "tags_pk") @db.VarChar(255)
+  events_tags events_tags[]
+}
+
+model user_roles {
+  id      Int    @id @default(autoincrement())
+  user_id String @db.VarChar(50)
+  role_id Int
+  roles   roles  @relation(fields: [role_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users   users  @relation(fields: [user_id], references: [userid], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([user_id, role_id])
+}
+
+model users {
+  id              Int               @id @default(autoincrement())
+  email           String            @unique(map: "uq_users_email") @db.VarChar(255)
+  display_name    String?           @db.VarChar(255)
+  self            Boolean?
+  first_name      String?           @db.VarChar(100)
+  last_name       String?           @db.VarChar(100)
+  phone           String?           @db.VarChar(50)
+  created_at      DateTime?         @default(now()) @db.Timestamp(6)
+  updated_at      DateTime?         @default(now()) @db.Timestamp(6)
+  last_login      DateTime?         @db.Timestamp(6)
+  is_active       Boolean?          @default(true)
+  organizer_id    Int?
+  userid          String?           @unique(map: "uq_users_userid") @db.VarChar(50)
+  audit_log       audit_log[]
+  event_attendees event_attendees[]
+  event_comments  event_comments[]
+  event_waitlist  event_waitlist[]
+  user_roles      user_roles[]
+}
+
+model event_comments {
+  id              Int              @id @default(autoincrement())
+  instance_id     Int
+  user_id         String           @db.VarChar(50)
+  comment_text    String
+  created_at      DateTime?        @default(now()) @db.Timestamp(6)
+  updated_at      DateTime?        @default(now()) @db.Timestamp(6)
+  is_deleted      Boolean?         @default(false)
+  parent_id       Int?
+  event_instances event_instances  @relation(fields: [instance_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  parent          event_comments?  @relation("CommentReplies", fields: [parent_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  replies         event_comments[] @relation("CommentReplies")
+  users           users            @relation(fields: [user_id], references: [userid], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([instance_id], map: "idx_event_comments_instance")
+  @@index([user_id], map: "idx_event_comments_user")
+  @@index([created_at], map: "idx_event_comments_created")
+}

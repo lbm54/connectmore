@@ -1,0 +1,59 @@
+/* src/features/events/components/event_thumbnail_card.module.css */
+
+.card {
+  /* only rules that are annoying as utilities */
+  width: 280px;                    /* reduced from 320px by ~30% */
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  /* shadow/transform handled by utilities in JSX */
+}
+
+.thumb {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+.thumb img {
+  transition: transform .3s ease-out, opacity .3s ease-out;
+}
+
+.card:hover .thumb img {
+  transform: scale(1.05);
+  opacity: 0.3; /* dim the image on hover to show description */
+}
+
+/* overlay revealed on hover (utilities handle colors) */
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  opacity: 0;
+  transition: opacity .3s ease-out;
+}
+
+.card:hover .overlay { opacity: 1; }
+
+/* Description overlay that appears on hover */
+.descriptionOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  opacity: 0;
+  transition: opacity .3s ease-out;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+}
+
+.card:hover .descriptionOverlay { opacity: 1; }
+
+/* badge, moreBtn, meta etc. can stay here or inline — your call */
+.badge  { border-radius: 9999px; padding: .4rem .75rem; }
+.moreBtn{ position:absolute; top:.75rem; right:.75rem; }
+

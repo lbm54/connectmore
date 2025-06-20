@@ -1,0 +1,157 @@
+/* Base light values (duplicated for quick reference) */
+:root {
+  --background : var(--color-surface-50);
+  --foreground : var(--color-surface-900);
+}
+
+/* Dark mode flips foreground/background only
+   – the rest already switched in theme.css overrides */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background : var(--color-surface-900);
+    --foreground : var(--color-surface-50);
+  }
+}
+
+body {
+  background: var(--color-surface-900);  /* Now properly dark */
+  color: var(--color-surface-50);        /* Now properly light */
+  font-family: var(--font-body);
+  line-height: 1.5;
+}
+
+.superfeatured .overflow-hidden,
+.superfeatured .overflow-hidden > div {
+  height: 100%;
+}
+
+/* Make date inputs work in dark mode */
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(100%);
+}
+
+/* Import react-big-calendar base styles */
+@import 'react-big-calendar/lib/css/react-big-calendar.css';
+
+/* Map cluster styles */
+.markercluster-map {
+  height: 600px;
+}
+
+.marker-cluster-custom {
+  background-color: rgba(59, 130, 246, 0.8);
+  border: 2px solid rgba(59, 130, 246, 1);
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.cluster-count {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* Custom popup styles */
+.event-popup .leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.event-popup .leaflet-popup-content {
+  margin: 0;
+  padding: 0;
+}
+
+/* Animated Background Particles */
+.animated-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  animation: float linear infinite;
+  opacity: 0.15;
+}
+
+/* Different gradient backgrounds for particles */
+.particle-primary {
+  background: var(--gradient-primary);
+}
+
+.particle-secondary {
+  background: var(--gradient-secondary);
+}
+
+.particle-energy {
+  background: var(--gradient-energy);
+}
+
+.particle-fresh {
+  background: var(--gradient-fresh);
+}
+
+/* Floating animation */
+@keyframes float {
+  0% {
+    transform: translateY(100vh) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.15;
+  }
+  90% {
+    opacity: 0.15;
+  }
+  100% {
+    transform: translateY(-100px) translateX(var(--drift)) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Pulse animation for some particles */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.2;
+  }
+}
+
+.particle-pulse {
+  animation: pulse 4s ease-in-out infinite;
+}
+
+/* Size variations */
+.particle-small {
+  width: 4px;
+  height: 4px;
+}
+
+.particle-medium {
+  width: 8px;
+  height: 8px;
+}
+
+.particle-large {
+  width: 12px;
+  height: 12px;
+}
