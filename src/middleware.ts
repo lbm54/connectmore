@@ -7,6 +7,7 @@ const isPublicRoute = createRouteMatcher([
   '/events/(.*)',
   '/calendar',
   '/map',
+  '/home',
   '/venues',
   '/organizers',
   '/api/events',
