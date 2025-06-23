@@ -13,6 +13,9 @@ const isPublicRoute = createRouteMatcher([
   '/api/events',
   '/api/organizers',
   '/api/venues',
+  '/api/categories',
+  '/api/tags',
+  '/api/venues',
   '/sign-in(.*)',
   '/sign-up(.*)',
 ]);
