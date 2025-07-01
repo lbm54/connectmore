@@ -4,11 +4,13 @@ import React, { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams, useRouter } from 'next/navigation';
 
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Tabs, TabsContent } from '@/components/ui/tabs';
 
 import { fetchEvents, eventQueryKeys } from '@/features/events/api';
 import HorizontalEventList from './HorizontalEventList';
 import EventThumbnailCard from './EventThumbnailCard';
+import CategoryChips from './CategoryChips';
+import CategoryTabs from './CategoryTabs';
 import type { FlatEventInstance } from '../models/flat_event_instance';
 import type { Category } from '@/features/organizers/models/categories_tags';
 
@@ -122,8 +124,6 @@ export default function EventsPageClient() {
     return filtered;
   }, [events, searchTerm, dateFilter, tagsFilter, activeCategory, categories]);
 
-
-
   // Get active filters for pill display
   const getActiveFilters = () => {
     const filters = [];
@@ -191,28 +191,25 @@ export default function EventsPageClient() {
         </div>
       )}
 
-      {/* Category Tabs */}
-      <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-full mt-6">
-        <div className="overflow-x-auto">
-          <TabsList className="h-14 p-1 bg-surface-800 border border-surface-700 rounded-lg shadow-lg">
-            <TabsTrigger 
-              value="all" 
-              className="relative px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 data-[state=active]:gradient-primary data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-surface-700 text-surface-300 data-[state=active]:border-0"
-            >
-              All Events
-            </TabsTrigger>
-            {categories.map(category => (
-              <TabsTrigger 
-                key={category.id} 
-                value={category.id.toString()} 
-                className="relative px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 data-[state=active]:gradient-secondary data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-surface-700 text-surface-300 data-[state=active]:border-0"
-              >
-                {category.category_name}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </div>
+      {/* Category Selection */}
+      <div className="w-full mt-6">
+        {/* Mobile Chips */}
+        <CategoryChips 
+          categories={categories}
+          activeCategory={activeCategory}
+          onCategoryChange={setActiveCategory}
+        />
 
+        {/* Desktop Tabs */}
+        <CategoryTabs 
+          categories={categories}
+          activeCategory={activeCategory}
+          onCategoryChange={setActiveCategory}
+        />
+      </div>
+
+      {/* Content */}
+      <Tabs value={activeCategory} className="w-full">
         {/* All Events Tab */}
         <TabsContent value="all" className="mt-6">
           {activeCategory === 'all' ? (
@@ -320,4 +317,4 @@ export default function EventsPageClient() {
       )}
     </div>
   );
-} 
+}
