@@ -20,7 +20,7 @@ export default function SuperFeaturedCarousel({
   }
 
   return (
-    <div className="superfeatured relative w-screen h-[70vh] md:h-[85vh] overflow-hidden">
+    <div className="superfeatured relative w-full h-[70vh] md:h-[85vh] overflow-hidden">
       <Carousel
         plugins={[Autoplay({ delay: 6000, stopOnInteraction: false })]}
         opts={{ loop: true }}
@@ -40,13 +40,13 @@ export default function SuperFeaturedCarousel({
                     className="absolute inset-0 bg-center bg-cover"
                     style={{ backgroundImage: `url(${bg})` }}
                   />
-                  <div className="relative z-10 flex h-full flex-col justify-end p-6">
-                    <div className="bg-black/60 backdrop-blur-sm rounded-lg p-6 max-w-2xl">
-                      <h2 className="text-4xl md:text-5xl font-bold text-white mb-3">
+                  <div className="relative z-10 flex h-full flex-col justify-end p-4 md:p-6">
+                    <div className="bg-black/60 backdrop-blur-sm rounded-lg p-4 md:p-6 max-w-2xl">
+                      <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-2 md:mb-3">
                         {ev.instance_name || ev.eventName}
                       </h2>
                       {ev.snippet && (
-                        <p className="text-lg md:text-xl text-white/95 line-clamp-3 leading-relaxed">
+                        <p className="text-base md:text-lg lg:text-xl text-white/95 line-clamp-3 leading-relaxed">
                           {ev.snippet}
                         </p>
                       )}

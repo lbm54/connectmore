@@ -41,13 +41,13 @@ export default function HorizontalEventList({
   return (
     <section className="w-full py-6 bg-surface-900 text-white">
       {/* header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-6 px-4 md:px-0">
         <h2 className={getTitleClass()}>{title}</h2>
 
         {showViewAll && (
           <button
             onClick={onViewAll}
-            className="text-primary hover:text-primary/80 text-sm md:text-base font-medium"
+            className="text-primary hover:text-primary/80 text-sm md:text-base font-medium flex-shrink-0"
           >
             View all
           </button>
@@ -62,13 +62,13 @@ export default function HorizontalEventList({
         }} /* dragFree = smooth like ListView */
         className="w-full"
       >
-        {/* negative margin + padding keep the same horizontal gutters as before */}
-        <CarouselContent className="-ml-4 md:-ml-6">
+        {/* Proper padding for mobile */}
+        <CarouselContent className="-ml-2 md:-ml-4">
           {Array.isArray(children)
             ? children.map((child, idx) => (
                 <CarouselItem
                   key={idx}
-                  className="pl-4 mr-12 md:pl-6 basis-[16rem]" /* 16 rem cards overflow */
+                  className="pl-2 md:pl-4 basis-[280px] md:basis-[320px] flex-shrink-0"
                 >
                   {child}
                 </CarouselItem>

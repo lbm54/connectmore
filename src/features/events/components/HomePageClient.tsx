@@ -49,7 +49,7 @@ export default function HomePageClient({ daysAhead }: { daysAhead: number }) {
   };
 
   return (
-    <main className="min-h-screen bg-surface-900 text-white">
+    <main className="min-h-screen bg-surface-900 text-white overflow-x-hidden">
       <SuperFeaturedCarousel events={events} />
 
       {isLoading ? (
@@ -58,33 +58,35 @@ export default function HomePageClient({ daysAhead }: { daysAhead: number }) {
           {/* <span className="ml-4">Loading amazing events…</span> */}
         </div>
       ) : (
-        <section className="container mx-auto px-4 space-y-8 py-8 bg-surface-900">
-          {Object.entries(eventsByCategory).map(([categoryName, categoryEvents]) => (
-            <HorizontalEventList 
-              key={categoryName}
-              title={categoryName} 
-              showViewAll 
-              onViewAll={handleViewAll}
-            >
-              {categoryEvents.map((ev) => (
-                <EventThumbnailCard key={ev.id} event={ev} />
-              ))}
-            </HorizontalEventList>
-          ))}
-          {/* {free.length > 0 && (
-            <HorizontalEventList title="Free" showViewAll>
-              {free.map((ev) => (
-                <EventThumbnailCard key={ev.id} event={ev} />
-              ))}
-            </HorizontalEventList>
-          )}
-          {rest.length > 0 && (
-            <HorizontalEventList title="More Events" showViewAll>
-              {rest.map((ev) => (
-                <EventThumbnailCard key={ev.id} event={ev} />
-              ))}
-            </HorizontalEventList>
-          )} */}
+        <section className="w-full bg-surface-900 py-8">
+          <div className="container mx-auto px-4 space-y-8">
+            {Object.entries(eventsByCategory).map(([categoryName, categoryEvents]) => (
+              <HorizontalEventList 
+                key={categoryName}
+                title={categoryName} 
+                showViewAll 
+                onViewAll={handleViewAll}
+              >
+                {categoryEvents.map((ev) => (
+                  <EventThumbnailCard key={ev.id} event={ev} />
+                ))}
+              </HorizontalEventList>
+            ))}
+            {/* {free.length > 0 && (
+              <HorizontalEventList title="Free" showViewAll>
+                {free.map((ev) => (
+                  <EventThumbnailCard key={ev.id} event={ev} />
+                ))}
+              </HorizontalEventList>
+            )}
+            {rest.length > 0 && (
+              <HorizontalEventList title="More Events" showViewAll>
+                {rest.map((ev) => (
+                  <EventThumbnailCard key={ev.id} event={ev} />
+                ))}
+              </HorizontalEventList>
+            )} */}
+          </div>
         </section>
       )}
     </main>
