@@ -136,13 +136,13 @@ export default function Logo(props: React.SVGProps<SVGSVGElement>) {
           <text x={78}  y={70}>N</text>
           <text x={106} y={70}>N</text>
           <text x={134} y={70}>E</text>
-          <text x={162} y={70}>C</text>
-          <text x={190} y={70}>T</text>
-          <text x={215} y={70}>M</text>
-          <circle cx={263} cy={57} r={13} fill="url(#yellowPiece)" />
+          <text x={160} y={70}>C</text>
+          <text x={186} y={70}>T</text>
+          <text x={210} y={70}>M</text>
+          <circle cx={258} cy={57} r={13} fill="url(#yellowPiece)" />
           {/* RE shifted a bit left */}
-          <text x={281} y={70}>R</text>
-          <text x={309} y={70}>E</text>
+          <text x={275} y={70}>R</text>
+          <text x={303} y={70}>E</text>
         </g>
       </svg>
     );

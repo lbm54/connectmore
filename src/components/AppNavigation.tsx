@@ -1,7 +1,6 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-// import Image from "next/image";
 import Link from "next/link";
 import { useState, useCallback, useEffect, useRef, Suspense } from "react";
 import {
@@ -27,6 +26,7 @@ import {
   FilterIcon,
   CloseIcon,
 } from "@/components/AppIcons";
+import MobileLogo from "./mobile_logo";
 
 // Types for tags
 interface Tag {
@@ -34,18 +34,16 @@ interface Tag {
   tag_name: string;
 }
 
-
-
 // Create an internal navbar component that uses useSearchParams
 function AppNavbarInternal() {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
-  
+
   // Mobile state
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showMobileSearch, setShowMobileSearch] = useState(false);
-  
+
   // Existing state
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState(
@@ -223,8 +221,11 @@ function AppNavbarInternal() {
           <NavbarSection>
             {/* Logo */}
             <Link href="/home" className="flex items-center">
-              {/* try h‑10 (40 px) or h‑12 (48 px) */}
-              <Logo className="h-20 w-auto" />
+              {/* Mobile Logo - Image */}
+              <MobileLogo className="h-12 w-auto lg:hidden" />
+
+              {/* Desktop Logo - SVG */}
+              <Logo className="hidden lg:block h-12 w-auto" />
             </Link>
 
             <NavbarDivider />
@@ -310,23 +311,17 @@ function AppNavbarInternal() {
 
       {/* Mobile Navigation */}
       <div className="lg:hidden">
-        <div className="bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-700 px-4 py-3">
+        <div className="bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-700 px-3 py-2">
           <div className="flex items-center justify-between">
-            {/* Hamburger Menu Button */}
-            {/* <button
-              onClick={() => setShowMobileMenu(true)}
-              className="p-2 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
-            >
-              <HamburgerIcon className="w-6 h-6" />
-            </button> */}
+            {/* Logo - Left aligned, constrained width */}
+            <div className="flex-shrink-0 w-24">
+              <Link href="/home" className="flex items-center">
+                <MobileLogo className="h-8 w-auto max-w-24" />
+              </Link>
+            </div>
 
-            {/* Logo */}
-            <Link href="/home" className="flex items-center">
-              <Logo className="h-12 w-auto" />
-            </Link>
-
-            {/* Mobile Actions */}
-            <div className="flex items-center gap-2">
+            {/* Mobile Actions - Right aligned */}
+            <div className="flex items-center gap-1">
               {/* Search Button */}
               <button
                 onClick={() => setShowMobileSearch(!showMobileSearch)}
@@ -349,25 +344,41 @@ function AppNavbarInternal() {
               </button>
 
               {/* User Button */}
-              <SignedOut>
-                <SignUpButton mode="modal">
-                  <button className="p-2 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                  </button>
-                </SignUpButton>
-              </SignedOut>
-              <SignedIn>
-                <UserButton />
-              </SignedIn>
+              <div className="ml-1">
+                <SignedOut>
+                  <SignUpButton mode="modal">
+                    <button className="p-2 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                        />
+                      </svg>
+                    </button>
+                  </SignUpButton>
+                </SignedOut>
+                <SignedIn>
+                  <UserButton />
+                </SignedIn>
+              </div>
             </div>
           </div>
 
           {/* Mobile Search Bar - Slides down */}
-          <div className={`overflow-hidden transition-all duration-300 ease-in-out ${
-            showMobileSearch ? 'max-h-20 opacity-100 mt-3' : 'max-h-0 opacity-0 mt-0'
-          }`}>
+          <div
+            className={`overflow-hidden transition-all duration-300 ease-in-out ${
+              showMobileSearch
+                ? "max-h-20 opacity-100 mt-3"
+                : "max-h-0 opacity-0 mt-0"
+            }`}
+          >
             <Input
               type="search"
               placeholder="Search events..."
@@ -383,15 +394,15 @@ function AppNavbarInternal() {
       {showMobileMenu && (
         <div className="fixed inset-0 z-50 lg:hidden">
           {/* Backdrop */}
-          <div 
+          <div
             className="fixed inset-0 bg-black/50"
             onClick={() => setShowMobileMenu(false)}
           />
-          
+
           {/* Drawer */}
           <div className="fixed left-0 top-0 h-full w-80 max-w-[85%] bg-white dark:bg-zinc-900 shadow-xl">
             <div className="flex items-center justify-between p-4 border-b border-zinc-200 dark:border-zinc-700">
-              <Logo className="h-10 w-auto" />
+              
               <button
                 onClick={() => setShowMobileMenu(false)}
                 className="p-2 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
@@ -421,7 +432,10 @@ function AppNavbarInternal() {
                     : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
                 }`}
               >
-                <EventsIcon isActive={pathname === "/events"} className="w-5 h-5" />
+                <EventsIcon
+                  isActive={pathname === "/events"}
+                  className="w-5 h-5"
+                />
                 Events
               </Link>
 
@@ -433,7 +447,10 @@ function AppNavbarInternal() {
                     : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
                 }`}
               >
-                <OrganizersIcon isActive={pathname === "/organizers"} className="w-5 h-5" />
+                <OrganizersIcon
+                  isActive={pathname === "/organizers"}
+                  className="w-5 h-5"
+                />
                 Organizers
               </Link>
 
@@ -445,7 +462,10 @@ function AppNavbarInternal() {
                     : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
                 }`}
               >
-                <VenuesIcon isActive={pathname === "/venues"} className="w-5 h-5" />
+                <VenuesIcon
+                  isActive={pathname === "/venues"}
+                  className="w-5 h-5"
+                />
                 Venues
               </Link>
 
@@ -459,7 +479,10 @@ function AppNavbarInternal() {
                     : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
                 }`}
               >
-                <CalendarIcon isActive={pathname === "/calendar"} className="w-5 h-5" />
+                <CalendarIcon
+                  isActive={pathname === "/calendar"}
+                  className="w-5 h-5"
+                />
                 Calendar View
               </Link>
 
@@ -591,7 +614,7 @@ function AppNavbarInternal() {
 // Create a fallback component for when Suspense is loading
 function AppNavbarFallback() {
   const pathname = usePathname();
-  
+
   return (
     <>
       {/* Desktop Fallback */}
@@ -645,18 +668,29 @@ function AppNavbarFallback() {
 
       {/* Mobile Fallback */}
       <div className="lg:hidden">
-        <div className="bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-700 px-4 py-3">
+        <div className="bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-700 px-3 py-2">
           <div className="flex items-center justify-between">
-            <div className="w-8" /> {/* Spacer for hamburger */}
-            <Link href="/home" className="flex items-center">
-              <Logo className="h-12 w-auto" />
-            </Link>
-            <div className="flex items-center gap-2">
+            <div className="flex-shrink-0 w-24">
+              <Link href="/home" className="flex items-center">
+                <MobileLogo className="h-8 w-auto max-w-24" />
+              </Link>
+            </div>
+            <div className="flex items-center gap-1">
               <SignedOut>
                 <SignUpButton mode="modal">
                   <button className="p-2 text-zinc-600 dark:text-zinc-400">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M16 7a4 4 0 11-8 0 4 4 0 00-7 7h14a7 7 0 00-7-7z"
+                      />
                     </svg>
                   </button>
                 </SignUpButton>
@@ -680,7 +714,3 @@ export function AppNavbar() {
     </Suspense>
   );
 }
-
-
-
-
