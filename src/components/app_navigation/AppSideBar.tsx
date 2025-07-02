@@ -2,7 +2,7 @@
 import { SignedIn, SignedOut, SignUpButton, UserButton } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { HomeIcon, EventsIcon, OrganizersIcon, VenuesIcon, CalendarIcon, MapIcon } from "@/components/AppIcons"; // Adjust the import path as necessary
+import { HomeIcon, EventsIcon, OrganizersIcon, VenuesIcon, CalendarIcon, MapIcon } from "@/components/app_navigation/AppIcons"; // Adjust the import path as necessary
 
 export function AppSidebar() {
     const pathname = usePathname();

@@ -12,8 +12,8 @@ import {
 } from "@/components/catalyst/navbar";
 
 import { SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import Logo from "./logo";
-import { Input } from "./ui/input";
+import Logo from "../logo";
+import { Input } from "../ui/input";
 import {
   HomeIcon,
   EventsIcon,
@@ -25,8 +25,8 @@ import {
   SearchIcon,
   FilterIcon,
   CloseIcon,
-} from "@/components/AppIcons";
-import MobileLogo from "./mobile_logo";
+} from "@/components/app_navigation/AppIcons";
+import MobileLogo from "../mobile_logo";
 
 // Types for tags
 interface Tag {

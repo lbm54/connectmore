@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Calendar, Users, TrendingUp, ArrowRight, Plus, Search } from 'lucide-react';
+import { Calendar, Users, TrendingUp, ArrowRight, Plus, Search, Upload } from 'lucide-react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
@@ -185,12 +185,14 @@ function OrganizerDashboard({ user, organizer, events }: DashboardProps) {
               All Events
             </Link>
           </Button>
-          {/* <Button variant="outline" asChild className="bg-surface-800 border-surface-700 text-surface-50 hover:bg-surface-700">
-            <Link href="/organizers/settings">
-              <Settings className="mr-2 h-4 w-4" />
-              Settings
+          
+          <Button variant="outline" asChild className="bg-surface-800 border-surface-700 text-surface-50 hover:bg-surface-700">
+            <Link href="/organizers/import-events">
+              <Upload className="mr-2 h-4 w-4" />
+              Import Events
             </Link>
-          </Button> */}
+          </Button>
+          
           <Button asChild className="bg-primary-600 text-surface-50 hover:bg-primary-700">
             <Link href="/organizers/create-event">
               <Plus className="mr-2 h-4 w-4" />

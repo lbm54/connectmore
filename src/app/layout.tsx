@@ -3,9 +3,9 @@ import type { Metadata } from "next";
 import "../styles/globals.css";
 import "../styles/theme.css";
 import { StackedLayout } from "@/components/catalyst/stacked-layout";
-import { AppNavbar } from "@/components/AppNavigation";
-import { AppSidebar } from "@/components/AppSideBar";
-import { AppFooter } from "@/components/AppFooter";
+import { AppNavbar } from "@/components/app_navigation/AppNavigation";
+import { AppSidebar } from "@/components/app_navigation/AppSideBar";
+import { AppFooter } from "@/components/app_navigation/AppFooter";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ReactQueryProvider } from "@/lib/reactQuery";
 
