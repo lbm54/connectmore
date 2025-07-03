@@ -640,12 +640,12 @@ export default function EventForm({
                     control={control}
                     render={({ field }) => (
                       <Combobox
-                        value={venues.find(v => v.id === field.value) || null}
+                        value={venues.find((v: any) => v.id === field.value) || null}
                         onChange={(venue) => field.onChange(venue?.id)}
                         displayValue={(venue) => venue?.name || ''}
                         placeholder="Search and select a venue..."
                         className="w-full"
-                        filter={(venue, query) => 
+                        filter={(venue: any, query: string) => 
                           venue.name.toLowerCase().includes(query.toLowerCase()) ||
                           (venue.city && venue.city.toLowerCase().includes(query.toLowerCase())) ||
                           (venue.state && venue.state.toLowerCase().includes(query.toLowerCase()))
@@ -653,7 +653,7 @@ export default function EventForm({
                         options={venues}
                         disabled={venuesLoading}
                       >
-                        {(venue) => (
+                        {(venue: any) => (
                           <ComboboxOption key={venue.id} value={venue}>
                             <div className="flex flex-col">
                               <ComboboxLabel className="font-medium">
