@@ -39,12 +39,19 @@ import { fetchVenuesList, venueQueryKeys } from '@/features/venues/api';
 // import type { Category, Tag } from '../models/categories_tags';
 
 // Updated form validation schema
+// Updated form validation schema
 const eventFormSchema = z.object({
   name: z.string().min(1, 'Event name is required'),
   summary: z.string().optional(),
   description: z.string().optional(),
-  categoryId: z.number({required_error: 'Category is required'}).min(1, 'Category is required'),
-  subcategoryId: z.number({required_error: 'Subcategory is required'}).min(1, 'Subcategory is required'),
+  categoryId: z.preprocess(
+    (val) => val === "" || val === undefined ? undefined : Number(val),
+    z.number({required_error: 'Category is required'}).min(1, 'Category is required')
+  ),
+  subcategoryId: z.preprocess(
+    (val) => val === "" || val === undefined ? undefined : Number(val),
+    z.number({required_error: 'Subcategory is required'}).min(1, 'Subcategory is required')
+  ),
   thumbnailAddress: z.string().url().optional().or(z.literal('')),
   imageAddress: z.string().url().optional().or(z.literal('')),
   videoUrl: z.string().url().optional().or(z.literal('')),
@@ -55,7 +62,10 @@ const eventFormSchema = z.object({
   zip: z.string().optional(),
   customVenueName: z.string().optional(),
   useCustomVenue: z.boolean(),
-  maxAttendees: z.number().optional().or(z.literal('')).transform((val) => val === '' ? undefined : val),
+  maxAttendees: z.preprocess(
+    (val) => val === "" || val === undefined ? undefined : Number(val),
+    z.number().optional()
+  ),
   snippet: z.string().max(100).optional(),
   
   // Instance fields
@@ -68,12 +78,18 @@ const eventFormSchema = z.object({
   // Recurring event fields
   isRecurring: z.boolean(),
   recurrencePattern: z.enum(['daily', 'weekly', 'monthly', 'yearly']).optional(),
-  recurrenceInterval: z.number().min(1).max(30).optional(),
+  recurrenceInterval: z.preprocess(
+    (val) => val === "" || val === undefined ? undefined : Number(val),
+    z.number().min(1).max(30).optional()
+  ),
   recurrenceEndDate: z.string().optional(),
   recurrenceDaysOfWeek: z.array(z.number().min(0).max(6)).optional(),
   
   // Venue and tags
-  venueId: z.number().optional(),
+  venueId: z.preprocess(
+    (val) => val === "" || val === undefined ? undefined : Number(val),
+    z.number().optional()
+  ),
   tagIds: z.array(z.number()).optional(),
 });
 
