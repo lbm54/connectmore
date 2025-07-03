@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@/app/generated/prisma';
 import { getCurrentUser } from '@/lib/auth';
-import { createRRule, generateInstancesFromRRule } from '@/features/organizers/utils/rrule';
+// import { createRRule, generateInstancesFromRRule } from '@/features/organizers/utils/rrule';
 import type { CreateEventInput } from '@/features/organizers/models/organizer_event';
 
 const prisma = new PrismaClient();
@@ -55,6 +55,8 @@ function convertParsedEventToCreateInput(parsedEvent: ParsedEvent): CreateEventI
     address: parsedEvent.venue_address,
     allowWaitlist: true,
     isRecurring: false, // Parsed events are typically one-time events
+    categoryId: 1, // Default category ID - you may want to create a "General" category
+    subcategoryId: 1, // Default subcategory ID - you may want to create a "General" subcategory
   };
 }
 

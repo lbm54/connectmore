@@ -21,8 +21,8 @@ export type CreateEventInput = {
   name: string;
   summary?: string;
   description?: string;
-  categoryId?: number;
-  subcategoryId?: number;
+  categoryId: number;
+  subcategoryId: number;
   thumbnailAddress?: string;
   imageAddress?: string;
   videoUrl?: string;
