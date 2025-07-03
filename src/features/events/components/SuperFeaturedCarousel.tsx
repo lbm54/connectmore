@@ -11,13 +11,13 @@ export default function SuperFeaturedCarousel({
   events: FlatEventInstance[];
 }) {
   const items = events.filter((e) => e.is_super_featured);
-  if (items.length === 0) {
-    return (
-      <div className="flex items-center justify-center w-full bg-surface-900">
-        <span>Loading amazing events…</span>
-      </div>
-    );
-  }
+  // if (items.length === 0) {
+  //   return (
+  //     <div className="flex items-center justify-center w-full bg-surface-900">
+  //       <span>Loading amazing events…</span>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="superfeatured relative w-full h-[70vh] md:h-[85vh] overflow-hidden">

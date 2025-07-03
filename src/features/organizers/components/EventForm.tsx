@@ -15,7 +15,8 @@ import {
   Repeat,
   X,
   FolderOpen,
-  Search
+  Search,
+  ChevronDown
 } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -31,9 +32,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-// import { Combobox, ComboboxOption } from '@/components/catalyst/combobox';
+import { Combobox, ComboboxOption, ComboboxLabel } from '@/components/catalyst/combobox';
 import type { CreateEventInput, UpdateEventInput } from '../models/organizer_event';
 import { fetchCategories, fetchTags, organizerQueryKeys } from '../api';
+import { fetchVenuesList, venueQueryKeys } from '@/features/venues/api';
 // import type { Category, Tag } from '../models/categories_tags';
 
 // Updated form validation schema
@@ -53,7 +55,7 @@ const eventFormSchema = z.object({
   zip: z.string().optional(),
   customVenueName: z.string().optional(),
   useCustomVenue: z.boolean(),
-  maxAttendees: z.number().min(1).optional(),
+  maxAttendees: z.number().optional().or(z.literal('')).transform((val) => val === '' ? undefined : val),
   snippet: z.string().max(100).optional(),
   
   // Instance fields
@@ -113,7 +115,7 @@ export default function EventForm({
     }
   }, [initialData?.tagIds]);
 
-  // Fetch categories and tags
+  // Fetch categories, tags, and venues
   const { data: categories = [], isLoading: categoriesLoading } = useQuery({
     queryKey: organizerQueryKeys.categories,
     queryFn: fetchCategories,
@@ -123,6 +125,13 @@ export default function EventForm({
     queryKey: organizerQueryKeys.tags,
     queryFn: fetchTags,
   });
+
+  const { data: venuesData, isLoading: venuesLoading } = useQuery({
+    queryKey: venueQueryKeys.list(1, 100, ''),
+    queryFn: () => fetchVenuesList(1, 100, ''),
+  });
+
+  const venues = venuesData?.venues || [];
 
   const {
     register,
@@ -302,20 +311,23 @@ export default function EventForm({
                       name="categoryId"
                       control={control}
                       render={({ field }) => (
-                        <select
-                          {...field}
-                          value={field.value || ''}
-                          onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
-                          className={`w-full px-3 py-2 border rounded-md bg-white dark:bg-gray-800 ${errors.categoryId ? 'border-red-500' : 'border-gray-300'}`}
-                          disabled={categoriesLoading}
-                        >
-                          <option value="">Select category</option>
-                          {categories.map((category) => (
-                            <option key={category.id} value={category.id}>
-                              {category.category_name}
-                            </option>
-                          ))}
-                        </select>
+                        <div className="relative">
+                          <select
+                            {...field}
+                            value={field.value || ''}
+                            onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
+                            className={`w-full px-3 py-2 pr-10 border rounded-md bg-white dark:bg-gray-800 appearance-none ${errors.categoryId ? 'border-red-500' : 'border-gray-300'}`}
+                            disabled={categoriesLoading}
+                          >
+                            <option value="">Select category</option>
+                            {categories.map((category) => (
+                              <option key={category.id} value={category.id}>
+                                {category.category_name}
+                              </option>
+                            ))}
+                          </select>
+                          <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+                        </div>
                       )}
                     />
                     {errors.categoryId && (
@@ -329,20 +341,23 @@ export default function EventForm({
                       name="subcategoryId"
                       control={control}
                       render={({ field }) => (
-                        <select
-                          {...field}
-                          value={field.value || ''}
-                          onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
-                          className={`w-full px-3 py-2 border rounded-md bg-white dark:bg-gray-800 ${errors.subcategoryId ? 'border-red-500' : 'border-gray-300'}`}
-                          disabled={!watchCategoryId || subcategories.length === 0}
-                        >
-                          <option value="">Select subcategory</option>
-                          {subcategories.map((subcategory) => (
-                            <option key={subcategory.id} value={subcategory.id}>
-                              {subcategory.subcategory_name}
-                            </option>
-                          ))}
-                        </select>
+                        <div className="relative">
+                          <select
+                            {...field}
+                            value={field.value || ''}
+                            onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
+                            className={`w-full px-3 py-2 pr-10 border rounded-md bg-white dark:bg-gray-800 appearance-none ${errors.subcategoryId ? 'border-red-500' : 'border-gray-300'}`}
+                            disabled={!watchCategoryId || subcategories.length === 0}
+                          >
+                            <option value="">Select subcategory</option>
+                            {subcategories.map((subcategory) => (
+                              <option key={subcategory.id} value={subcategory.id}>
+                                {subcategory.subcategory_name}
+                              </option>
+                            ))}
+                          </select>
+                          <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+                        </div>
                       )}
                     />
                     {errors.subcategoryId && (
@@ -624,17 +639,40 @@ export default function EventForm({
                     name="venueId"
                     control={control}
                     render={({ field }) => (
-                      <select
-                        {...field}
-                        value={field.value || ''}
-                        onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-gray-800"
+                      <Combobox
+                        value={venues.find(v => v.id === field.value) || null}
+                        onChange={(venue) => field.onChange(venue?.id)}
+                        displayValue={(venue) => venue?.name || ''}
+                        placeholder="Search and select a venue..."
+                        className="w-full"
+                        filter={(venue, query) => 
+                          venue.name.toLowerCase().includes(query.toLowerCase()) ||
+                          (venue.city && venue.city.toLowerCase().includes(query.toLowerCase())) ||
+                          (venue.state && venue.state.toLowerCase().includes(query.toLowerCase()))
+                        }
+                        options={venues}
+                        disabled={venuesLoading}
                       >
-                        <option value="">Select a venue</option>
-                        <option value="1">Innovation Depot</option>
-                      </select>
+                        {(venue) => (
+                          <ComboboxOption key={venue.id} value={venue}>
+                            <div className="flex flex-col">
+                              <ComboboxLabel className="font-medium">
+                                {venue.name}
+                              </ComboboxLabel>
+                              {(venue.city || venue.state) && (
+                                <span className="text-sm text-gray-500 dark:text-gray-400">
+                                  {[venue.city, venue.state].filter(Boolean).join(', ')}
+                                </span>
+                              )}
+                            </div>
+                          </ComboboxOption>
+                        )}
+                      </Combobox>
                     )}
                   />
+                  {venuesLoading && (
+                    <p className="text-sm text-gray-500 mt-1">Loading venues...</p>
+                  )}
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -712,7 +750,7 @@ export default function EventForm({
                   <label className="block text-sm font-medium mb-1">Max Attendees (optional)</label>
                   <Input
                     type="number"
-                    {...register('maxAttendees', { valueAsNumber: true })}
+                    {...register('maxAttendees')}
                     placeholder="No limit"
                     min={1}
                   />

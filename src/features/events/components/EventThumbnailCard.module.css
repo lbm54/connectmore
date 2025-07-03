@@ -3,7 +3,8 @@
 .card {
   /* only rules that are annoying as utilities */
   width: 280px;                    /* reduced from 320px by ~30% */
-  border-radius: var(--radius-card);
+  height: 420px;                   /* fixed height for uniform alignment */
+  border-radius: 12px;             /* slightly more rounded corners */
   overflow: hidden;
   /* shadow/transform handled by utilities in JSX */
 }

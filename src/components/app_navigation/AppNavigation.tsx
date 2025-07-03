@@ -12,7 +12,7 @@ import {
 } from "@/components/catalyst/navbar";
 
 import { SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import Logo from "../logo";
+// import Logo from "../logo";
 import { Input } from "../ui/input";
 import {
   HomeIcon,
@@ -26,7 +26,7 @@ import {
   FilterIcon,
   CloseIcon,
 } from "@/components/app_navigation/AppIcons";
-import MobileLogo from "../mobile_logo";
+// import MobileLogo from "../mobile_logo";
 
 // Types for tags
 interface Tag {
@@ -221,11 +221,10 @@ function AppNavbarInternal() {
           <NavbarSection>
             {/* Logo */}
             <Link href="/home" className="flex items-center">
-              {/* Mobile Logo - Image */}
-              <MobileLogo className="h-12 w-auto lg:hidden" />
-
-              {/* Desktop Logo - SVG */}
-              <Logo className="hidden lg:block h-12 w-auto" />
+              {/* Gradient Text Logo */}
+              <h1 className="text-xl font-bold text-gradient-primary">
+                ConnectMore
+              </h1>
             </Link>
 
             <NavbarDivider />
@@ -314,9 +313,12 @@ function AppNavbarInternal() {
         <div className="bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-700 px-3 py-2">
           <div className="flex items-center justify-between">
             {/* Logo - Left aligned, constrained width */}
-            <div className="flex-shrink-0 w-24">
+            <div className="flex-shrink-0 w-auto">
               <Link href="/home" className="flex items-center">
-                <MobileLogo className="h-8 w-auto max-w-24" />
+                {/* Gradient Text Logo for Mobile */}
+                <h1 className="text-lg font-bold text-gradient-primary">
+                  ConnectMore
+                </h1>
               </Link>
             </div>
 
@@ -358,7 +360,7 @@ function AppNavbarInternal() {
                           strokeLinecap="round"
                           strokeLinejoin="round"
                           strokeWidth={2}
-                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                          d="M16 7a4 4 0 11-8 0 4 4 0 008 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                         />
                       </svg>
                     </button>
@@ -622,7 +624,10 @@ function AppNavbarFallback() {
         <Navbar className="dark:data-hover:bg-white/5 dark:data-hover:*:data-[slot=icon]:fill-white">
           <NavbarSection>
             <Link href="/home" className="flex items-center">
-              <Logo className="h-20 w-auto" />
+              {/* Gradient Text Logo */}
+              <h1 className="text-xl font-bold text-gradient-primary">
+                ConnectMore
+              </h1>
             </Link>
             <NavbarDivider />
             <NavbarItem href="/home" current={pathname === "/home"}>
@@ -670,9 +675,12 @@ function AppNavbarFallback() {
       <div className="lg:hidden">
         <div className="bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-700 px-3 py-2">
           <div className="flex items-center justify-between">
-            <div className="flex-shrink-0 w-24">
+            <div className="flex-shrink-0 w-auto">
               <Link href="/home" className="flex items-center">
-                <MobileLogo className="h-8 w-auto max-w-24" />
+                {/* Gradient Text Logo for Mobile */}
+                <h1 className="text-lg font-bold text-gradient-primary">
+                  ConnectMore
+                </h1>
               </Link>
             </div>
             <div className="flex items-center gap-1">

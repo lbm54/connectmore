@@ -104,7 +104,7 @@ export default function EventThumbnailCard({
       </div>
 
       {/* ---- Meta ---- */}
-      <div className="flex flex-col gap-3 p-4">
+      <div className="flex flex-col gap-3 p-4 flex-1">
         <h3 className="font-heading font-bold text-lg leading-tight group-hover:text-primary line-clamp-2 text-surface-900">
           {title}
         </h3>
@@ -127,7 +127,10 @@ export default function EventThumbnailCard({
           <p className="text-sm text-surface-700 line-clamp-1">📍 {venue}</p>
         )}
 
-        {/* Organizer and venue name on same line */}
+        {/* Spacer to push bottom content down */}
+        <div className="flex-1" />
+
+        {/* Organizer and venue name on same line - anchored to bottom */}
         {(organizer_name || venueName) && (
           <div className="flex items-center justify-between text-xs text-surface-600">
             {organizer_name && <span>by {organizer_name}</span>}
